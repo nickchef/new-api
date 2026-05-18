@@ -135,3 +135,18 @@ For request structs that are parsed from client JSON and then re-marshaled to up
 ### Rule 7: Billing Expression System — Read `pkg/billingexpr/expr.md`
 
 When working on tiered/dynamic billing (expression-based pricing), you MUST read `pkg/billingexpr/expr.md` first. It documents the design philosophy, expression language (variables, functions, examples), full system architecture (editor → storage → pre-consume → settlement → log display), token normalization rules (`p`/`c` auto-exclusion), quota conversion, and expression versioning. All code changes to the billing expression system must follow the patterns described in that document.
+
+---
+
+## [2026-05-18] 项目规格创建（spec-create）
+
+- **项目概述**：在 new-api 中新增内容审核模块（Content Moderation），完整移植 sub2api 设计，作为现有本地 AC 词库的第二层智能审核（OpenAI omni-moderation）。详见 `spec/overview.md`。
+- **子目标数量**：19 个（详见 `spec/goals.md`）
+- **准出条件数**：15 条（详见 `spec/overview.md`）
+- **关键决策**：
+  1. **最小侵入（Fork 友好）**：本项目是 new-api 的 fork，需跟随上游更新。所有 CM 代码以新增文件为主，对上游文件累计修改 < 30 行后端 + < 15 行前端；通过 Gin 中间件而非修改 `controller/relay.go` 完成主链路接入；`service/sensitive.go` / `setting/sensitive.go` / `controller/relay.go` 零修改
+  2. 两层串联架构：L1 本地词库始终同步硬拦 + L2 OpenAI Moderation 按 mode 工作（off / observe / pre_block）
+  3. 输入提取默认照搬 sub2api："只审核最后一条 user 消息"，新增 `InputScope` 配置项允许扩大（`last_user` / `all_user` / `all_messages`），保留 `<system-reminder>` 过滤
+  4. 新增模型选择性审核：`ContentModerationModelMode` (all/whitelist/blacklist) + `ContentModerationModelList` 通配符匹配，按请求 body 中原始 model 字段判定
+  5. 三库通用强约束：JSON 字段统一落 TEXT，遵守 CLAUDE.md Rule 2；JSON 序列化全部走 `common.Marshal` 遵守 Rule 1
+  6. fail-open 优先：OpenAI 超时/失败、Redis 不可达、DB 写日志失败均不阻塞主链路；本地词库作为兜底

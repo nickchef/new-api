@@ -204,6 +204,8 @@ func main() {
 	// Log startup success message
 	common.LogStartupSuccess(startTime, port)
 
+	defer service.ShutdownContentModeration()
+
 	err = server.Run(":" + port)
 	if err != nil {
 		common.FatalLog("failed to start HTTP server: " + err.Error())
@@ -306,6 +308,8 @@ func InitResources() error {
 	if err != nil {
 		return err
 	}
+
+	service.InitContentModeration(model.PersistContentModerationLogRecord, model.NewContentModerationUserDisabler(), model.DeleteContentModerationLogsBefore)
 
 	perfmetrics.Init()
 

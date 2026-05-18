@@ -207,6 +207,7 @@ docker run --name new-api -d --restart always \
 - 📱 Telegram authorization login
 - 🔑 OIDC unified authentication
 - 🔍 Key quota query usage (with [new-api-key-tool](https://github.com/Calcium-Ion/new-api-key-tool))
+- 🛡️ Two-layer content moderation: local AC keyword + OpenAI omni-moderation-latest (observe / pre_block modes, see [docs/content_moderation.md](docs/content_moderation.md))
 
 ### 🚀 Advanced Features
 
