@@ -309,7 +309,42 @@ func InitResources() error {
 		return err
 	}
 
-	service.InitContentModeration(model.PersistContentModerationLogRecord, model.NewContentModerationUserDisabler(), model.DeleteContentModerationLogsBefore)
+	service.InitContentModeration(
+		func(rec service.ContentModerationLogRecord) error {
+			return model.PersistContentModerationLogRecord(model.ContentModerationLogRecord{
+				RequestID:         rec.RequestID,
+				UserID:            rec.UserID,
+				Username:          rec.Username,
+				TokenID:           rec.TokenID,
+				TokenName:         rec.TokenName,
+				Group:             rec.Group,
+				IP:                rec.IP,
+				Endpoint:          rec.Endpoint,
+				Provider:          rec.Provider,
+				Model:             rec.Model,
+				Protocol:          rec.Protocol,
+				Mode:              rec.Mode,
+				Action:            rec.Action,
+				DetectionLayer:    rec.DetectionLayer,
+				Flagged:           rec.Flagged,
+				HighestCategory:   rec.HighestCategory,
+				HighestScore:      rec.HighestScore,
+				CategoryScores:    rec.CategoryScores,
+				ThresholdSnapshot: rec.ThresholdSnapshot,
+				InputExcerpt:      rec.InputExcerpt,
+				InputHash:         rec.InputHash,
+				UpstreamLatencyMs: rec.UpstreamLatencyMs,
+				QueueDelayMs:      rec.QueueDelayMs,
+				Error:             rec.Error,
+				ViolationCount:    rec.ViolationCount,
+				AutoBanned:        rec.AutoBanned,
+				EmailSent:         rec.EmailSent,
+				CreatedAt:         rec.CreatedAt,
+			})
+		},
+		model.NewContentModerationUserDisabler(),
+		model.DeleteContentModerationLogsBefore,
+	)
 
 	perfmetrics.Init()
 
