@@ -469,6 +469,7 @@
     "Azure": "Azure",
     "AZURE_OPENAI_ENDPOINT *": "AZURE_OPENAI_ENDPOINT *",
     "Back": "返回",
+    "Back to Console": "返回控制台",
     "Back to Home": "返回主页",
     "Back to login": "返回登录",
     "Back to Models": "返回模型",

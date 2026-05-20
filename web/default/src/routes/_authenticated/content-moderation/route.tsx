@@ -3,17 +3,8 @@ Copyright (C) 2023-2026 QuantumNous
 
 Licensed under the GNU Affero General Public License v3 or later.
 */
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { useAuthStore } from '@/stores/auth-store'
-import { ROLE } from '@/lib/roles'
-import { ContentModerationLayout } from '@/features/content-moderation'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/content-moderation')({
-  beforeLoad: () => {
-    const { auth } = useAuthStore.getState()
-    if (auth.user?.role !== ROLE.SUPER_ADMIN) {
-      throw redirect({ to: '/403' })
-    }
-  },
-  component: ContentModerationLayout,
+  component: () => <Outlet />,
 })

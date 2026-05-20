@@ -3,9 +3,10 @@ Copyright (C) 2023-2026 QuantumNous
 
 Licensed under the GNU Affero General Public License v3 or later.
 */
-import { createFileRoute } from '@tanstack/react-router'
-import { ContentModerationConfigPage } from '@/features/content-moderation/config-page'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/content-moderation/config')({
-  component: ContentModerationConfigPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/system-settings/moderation/config' })
+  },
 })

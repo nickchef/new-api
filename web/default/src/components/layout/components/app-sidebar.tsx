@@ -17,15 +17,29 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 import { useMemo } from 'react'
-import { useLocation } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
+import { ArrowLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { ROLE } from '@/lib/roles'
 import { useLayout } from '@/context/layout-provider'
 import { useSidebarConfig } from '@/hooks/use-sidebar-config'
 import { useSidebarData } from '@/hooks/use-sidebar-data'
-import { Sidebar, SidebarContent, SidebarRail } from '@/components/ui/sidebar'
-import { getNavGroupsForPath } from '../lib/workspace-registry'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from '@/components/ui/sidebar'
+import {
+  WORKSPACE_IDS,
+  getNavGroupsForPath,
+  isInWorkspace,
+} from '../lib/workspace-registry'
 import { NavGroup } from './nav-group'
 
 /**
@@ -61,8 +75,15 @@ export function AppSidebar() {
     })
   }, [configFilteredNavGroups, userRole])
 
+  const inSystemSettings = isInWorkspace(pathname, WORKSPACE_IDS.SYSTEM_SETTINGS)
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
+      {inSystemSettings && (
+        <SidebarHeader>
+          <BackToConsoleButton label={t('Back to Console')} />
+        </SidebarHeader>
+      )}
       <SidebarContent className='py-2'>
         {currentNavGroups.map((props) => {
           const key = props.id || props.title
@@ -71,5 +92,27 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
+  )
+}
+
+function BackToConsoleButton({ label }: { label: string }) {
+  const { setOpenMobile } = useSidebar()
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          tooltip={label}
+          render={
+            <Link
+              to='/dashboard/overview'
+              onClick={() => setOpenMobile(false)}
+            />
+          }
+        >
+          <ArrowLeft />
+          <span>{label}</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   )
 }

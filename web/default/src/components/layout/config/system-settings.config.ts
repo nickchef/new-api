@@ -24,6 +24,7 @@ import {
   Settings,
   Shield,
   ShieldAlert,
+  ShieldCheck,
   Wrench,
 } from 'lucide-react'
 import { getAuthSectionNavItems } from '@/features/system-settings/auth/section-registry.tsx'
@@ -76,6 +77,28 @@ export function getSystemSettingsNavGroups(t: TFunction): NavGroup[] {
           title: t('Console Content'),
           icon: Layout,
           items: getContentSectionNavItems(t),
+        },
+        {
+          title: t('Content Moderation'),
+          icon: ShieldCheck,
+          items: [
+            {
+              title: t('Configuration'),
+              url: '/system-settings/moderation/config',
+            },
+            {
+              title: t('Moderation Logs'),
+              url: '/system-settings/moderation/logs',
+            },
+            {
+              title: t('Hash Blacklist'),
+              url: '/system-settings/moderation/blacklist',
+            },
+            {
+              title: t('Runtime Status'),
+              url: '/system-settings/moderation/status',
+            },
+          ],
         },
         {
           title: t('Operations'),

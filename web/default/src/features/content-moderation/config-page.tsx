@@ -77,8 +77,12 @@ export function ContentModerationConfigPage() {
       if (apiKeysToSend.length > 0) {
         payload.api_keys = apiKeysToSend
       }
-      await updateContentModerationConfig(payload)
-      toast.success(t('Save successful') || 'saved')
+      const res = await updateContentModerationConfig(payload)
+      if (!res?.success) {
+        // Error toast already shown by the response interceptor
+        return
+      }
+      toast.success(t('Save successful'))
       setNewKeys('')
       void load()
     } catch (e: any) {
@@ -113,7 +117,7 @@ export function ContentModerationConfigPage() {
   }
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 pb-24'>
       <section className='rounded border bg-card p-4'>
         <h2 className='mb-3 text-lg font-semibold'>Basics</h2>
         <label className='flex items-center gap-2'>
@@ -362,14 +366,22 @@ export function ContentModerationConfigPage() {
         />
       </section>
 
-      <div>
+      <div className='sticky bottom-0 -mx-4 flex items-center justify-end gap-2 border-t bg-background/95 px-4 py-3 backdrop-blur'>
+        <button
+          type='button'
+          onClick={() => void load()}
+          disabled={saving}
+          className='rounded border px-4 py-2 text-sm font-medium disabled:opacity-60'
+        >
+          {t('Reset')}
+        </button>
         <button
           type='button'
           onClick={save}
           disabled={saving}
-          className='rounded bg-primary px-4 py-2 text-primary-foreground'
+          className='rounded bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:opacity-60'
         >
-          {saving ? 'Saving...' : t('Save')}
+          {saving ? t('Saving...') : t('Save Changes')}
         </button>
       </div>
     </div>

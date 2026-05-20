@@ -5,8 +5,8 @@ Licensed under the GNU Affero General Public License v3 or later.
 */
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_authenticated/content-moderation/logs')({
+export const Route = createFileRoute('/_authenticated/system-settings/moderation/')({
   beforeLoad: () => {
-    throw redirect({ to: '/system-settings/moderation/logs' })
+    throw redirect({ to: '/system-settings/moderation/config' })
   },
 })

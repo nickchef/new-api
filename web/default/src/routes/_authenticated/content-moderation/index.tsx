@@ -7,6 +7,6 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_authenticated/content-moderation/')({
   beforeLoad: () => {
-    throw redirect({ to: '/content-moderation/config' })
+    throw redirect({ to: '/system-settings/moderation/config' })
   },
 })

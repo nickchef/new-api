@@ -33,7 +33,6 @@ import {
   CreditCard,
   ListTodo,
   Settings,
-  ShieldAlert,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { WORKSPACE_IDS } from '@/components/layout/lib/workspace-registry'
@@ -151,12 +150,6 @@ export function useSidebarData(): SidebarData {
             url: '/system-settings/site',
             activeUrls: ['/system-settings'],
             icon: Settings,
-          },
-          {
-            title: t('Content Moderation'),
-            url: '/content-moderation/config',
-            activeUrls: ['/content-moderation'],
-            icon: ShieldAlert,
           },
         ],
       },
